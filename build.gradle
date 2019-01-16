@@ -1,0 +1,115 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			name = "Modmuss50"
+			url = "http://maven.modmuss50.me/"
+		}
+		maven {
+			name = 'mojang'
+			url = 'https://libraries.minecraft.net/'
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+	}
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+version = "1.12.2-1.0.0"
+
+def ENV = System.getenv()
+if (ENV.BUILD_NUMBER) {
+	version = version + "." + "${System.getenv().BUILD_NUMBER}"
+}
+
+minecraft {
+	version = "1.12.2-14.23.5.2768"
+	mappings = "snapshot_20171003"
+	replace "@MODVERSION@", project.version
+	useDepAts = true
+	runDir = "run"
+}
+
+group = 'Retro-Exchange'
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+
+}
+
+repositories {
+	maven {
+		name = "Modmuss50"
+		url = "http://maven.modmuss50.me/"
+	}
+	maven {
+		// JEI
+		name "JEI"
+		url "http://dvs1.progwml6.com/files/maven"
+	}
+}
+
+dependencies {
+	deobfCompile('RebornCore:RebornCore-1.12.2:+:universal') {
+		transitive = false
+	}
+	deobfCompile "mezz.jei:jei_1.12.2:+"
+}
+
+import groovy.util.XmlSlurper
+import org.apache.commons.io.FileUtils
+
+task curseTools {
+	doLast {
+		def cacheFiles = new File(".gradle/curseTools")
+		if (!cacheFiles.exists()) {
+			cacheFiles.mkdirs()
+		}
+
+		def mavenMetadata = new File(cacheFiles, "maven-metadata.xml")
+
+		logger.lifecycle(":downloading curseTools metadata")
+		FileUtils.copyURLToFile(new URL("http://maven.modmuss50.me/CurseTools/CurseTools/maven-metadata.xml"), mavenMetadata)
+
+		def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
+		def curseToolsVersion = metadata.versioning.release
+
+		def curseTools = new File(cacheFiles, "${curseToolsVersion}.jar")
+
+		logger.lifecycle(":downloading CurseTools")
+		FileUtils.copyURLToFile(new URL("http://maven.modmuss50.me/CurseTools/CurseTools/${curseToolsVersion}/CurseTools-${curseToolsVersion}.jar"), curseTools)
+
+		logger.lifecycle(":launching CurseTools")
+		ant.java(jar: curseTools.getAbsolutePath(), fork: true, spawn: false) {
+			arg(value: jar.archivePath.getAbsolutePath())
+		}
+	}
+}
