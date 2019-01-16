@@ -32,7 +32,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 
-version = "1.12.2-1.0.0"
+version = "1.12.2-1.0.1"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
@@ -48,22 +48,6 @@ minecraft {
 }
 
 group = 'Retro-Exchange'
-
-processResources {
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
-
-
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		expand 'version': project.version, 'mcversion': project.minecraft.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
-
-}
 
 repositories {
 	maven {
