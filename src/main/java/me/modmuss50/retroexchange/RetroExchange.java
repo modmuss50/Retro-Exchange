@@ -87,7 +87,7 @@ public class RetroExchange {
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOW)//LOW is used as we want it to load as late as possible, but before crafttweaker
+	@SubscribeEvent(priority = EventPriority.LOW)
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		addTransmuteRecipe(Items.FLINT, Blocks.COBBLESTONE, 4);
 		addTransmuteRecipe(Blocks.GRAVEL, Blocks.DIRT, 4);
@@ -96,8 +96,8 @@ public class RetroExchange {
 		addTransmuteRecipe(Blocks.LOG, Blocks.PLANKS, 4);
 		addTransmuteRecipe(Items.CLAY_BALL, Blocks.GRAVEL, 4);
 		addTransmuteRecipe(Items.CLAY_BALL, Items.FLINT, 4);
-		addTransmuteRecipe(Blocks.OBSIDIAN, Blocks.PLANKS, 2);
 		addTransmuteRecipe(Blocks.CLAY, Items.CLAY_BALL, 4);
+		addTransmuteRecipe(Blocks.OBSIDIAN, Blocks.PLANKS, 2);
 		addTransmuteRecipe(Items.IRON_INGOT, Blocks.OBSIDIAN, 4);
 		addTransmuteRecipe(Items.IRON_INGOT, Blocks.CLAY, 4);
 		addTransmuteRecipe(Items.GOLD_INGOT, Items.IRON_INGOT, 8);
@@ -187,9 +187,9 @@ public class RetroExchange {
 			return;
 		}
 		for (int i = 0; i < stackList.size() -1; i++) {
-			RebornCraftingHelper.addShapelessRecipe(stackList.get(i + 1), getStoneStack(), stackList.get(i));
+			RebornCraftingHelper.addShapelessRecipe(stackList.get(i + 1).copy(), getStoneStack(), stackList.get(i).copy());
 		}
-		RebornCraftingHelper.addShapelessRecipe(stackList.get(0), getStoneStack(), stackList.get(stackList.size() -1));
+		RebornCraftingHelper.addShapelessRecipe(stackList.get(0).copy(), getStoneStack(), stackList.get(stackList.size() -1).copy());
 	}
 	
 	public static List<ItemStack> getAllOres(String oreDict){
@@ -202,7 +202,7 @@ public class RetroExchange {
 	}
 
 	public static ItemStack getStoneStack(){
-		return new ItemStack(transmutationStone, 1, 32767);
+		return new ItemStack(transmutationStone, 1, OreDictionary.WILDCARD_VALUE);
 	}
 
 
@@ -213,7 +213,7 @@ public class RetroExchange {
 	public static ItemStack getStack(Object object, int size){
 		ItemStack stack = ItemStack.EMPTY;
 		if(object instanceof ItemStack){
-			stack = (ItemStack) object;
+			stack = ((ItemStack) object).copy();
 		} if (object instanceof Block){
 			stack = new ItemStack((Block) object);
 		} if (object instanceof Item){

@@ -21,11 +21,11 @@ public class ItemUtils {
 		}
 
 		if (itemStack.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
-			return Collections.singletonList(itemStack);
+			return Collections.singletonList(itemStack.copy());
 		}
 
 		NonNullList<ItemStack> subtypes = NonNullList.create();
-		addSubtypesToList(subtypes, itemStack);
+		addSubtypesToList(subtypes, itemStack.copy());
 		return subtypes;
 	}
 
@@ -34,7 +34,7 @@ public class ItemUtils {
 		final int stackSize = itemStack.getCount();
 		for (CreativeTabs itemTab : item.getCreativeTabs()) {
 			if (itemTab == null) {
-				subtypeList.add(itemStack);
+				subtypeList.add(itemStack.copy());
 			} else {
 				addSubtypesFromCreativeTabToList(subtypeList, item, stackSize, itemTab);
 			}
@@ -60,7 +60,7 @@ public class ItemUtils {
 					subItemCopy.setCount(stackSize);
 					subtypeList.add(subItemCopy);
 				} else {
-					subtypeList.add(subItem);
+					subtypeList.add(subItem.copy());
 				}
 			}
 		}
