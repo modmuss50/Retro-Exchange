@@ -20,7 +20,7 @@ public class ItemUtils {
 			return Collections.emptyList();
 		}
 
-		if (itemStack.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
+		if (itemStack.getItemDamage() != OreDictionary.WILDCARD_VALUE || !itemStack.getHasSubtypes()) {
 			return Collections.singletonList(itemStack.copy());
 		}
 

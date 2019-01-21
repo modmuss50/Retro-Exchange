@@ -25,10 +25,7 @@ import reborncore.common.registration.RebornRegistry;
 import reborncore.common.registration.impl.ConfigRegistry;
 import reborncore.common.util.RebornCraftingHelper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RebornRegistry(modID = "retroexchange")
 @Mod(modid = "retroexchange", name = "Retro Exchange")
@@ -93,7 +90,6 @@ public class RetroExchange {
 		addTransmuteRecipe(Blocks.GRAVEL, Blocks.DIRT, 4);
 		addTransmuteRecipe(Blocks.SANDSTONE, Blocks.SAND, 4);
 		addTransmuteRecipe(Blocks.PLANKS, Items.STICK, 2);
-		addTransmuteRecipe(Blocks.LOG, Blocks.PLANKS, 4);
 		addTransmuteRecipe(Items.CLAY_BALL, Blocks.GRAVEL, 4);
 		addTransmuteRecipe(Items.CLAY_BALL, Items.FLINT, 4);
 		addTransmuteRecipe(Blocks.CLAY, Items.CLAY_BALL, 4);
@@ -117,19 +113,17 @@ public class RetroExchange {
 		addOneWayTransmuteRecipe(Blocks.SAND, Blocks.GLASS, 1);
 
 		addOreDictRR("record");
-		addOreDictRR("plankWood");
-		addOreDictRR("logWood");
-		addOreDictRR("slabWood");
-		addOreDictRR("treeSapling");
-		addOreDictRR("treeLeaves");
-		addOreDictRR("treeLeaves");
-		addOreDictRR("fenceWood");
-		addOreDictRR("fenceGateWood");
-		addOreDictRR("doorWood");
-		addOreDictRR("stickWood");
 		addOreDictRR("chestWood");
 		addOreDictRR("paneGlass");
 		addOreDictRR("blockGlass");
+
+		addSubTypeRR(Blocks.PLANKS);
+		addSubTypeRR(Blocks.LOG, Blocks.LOG2);
+		addSubTypeRR(Blocks.SAPLING);
+		addSubTypeRR(Blocks.LEAVES, Blocks.LEAVES2);
+		addSubTypeRR(Blocks.WOODEN_SLAB);
+		addSubTypeRR(Blocks.OAK_FENCE, Blocks.ACACIA_FENCE, Blocks.BIRCH_FENCE, Blocks.ACACIA_FENCE_GATE, Blocks.DARK_OAK_FENCE, Blocks.JUNGLE_FENCE, Blocks.SPRUCE_FENCE);
+		addSubTypeRR(Blocks.ACACIA_DOOR, Blocks.BIRCH_DOOR, Blocks.DARK_OAK_DOOR, Blocks.JUNGLE_DOOR, Blocks.OAK_DOOR, Blocks.SPRUCE_DOOR);
 
 		addAllSmelting();
 
@@ -180,6 +174,30 @@ public class RetroExchange {
 
 	public static void addOreDictRR(String oreDict){
 		List<ItemStack> stackList = getAllOres(oreDict);
+		if(stackList.isEmpty() || stackList.size() == 1){
+			return;
+		}
+		for (int i = 0; i < stackList.size() -1; i++) {
+			RebornCraftingHelper.addShapelessRecipe(stackList.get(i + 1).copy(), getStoneStack(), stackList.get(i).copy());
+		}
+		RebornCraftingHelper.addShapelessRecipe(stackList.get(0).copy(), getStoneStack(), stackList.get(stackList.size() -1).copy());
+	}
+
+	public static void addSubTypeRR(Object... objects){
+		List<ItemStack> stackList = new ArrayList<>();
+		for(Object object : objects){
+			if(object instanceof ItemStack){
+				stackList.add((ItemStack) object);
+			} else if (object instanceof Block){
+				ItemStack stack = new ItemStack((Block) object, 1, OreDictionary.WILDCARD_VALUE);
+				List<ItemStack> subTypes = ItemUtils.getSubtypes(stack);
+				stackList.addAll(subTypes);
+			} else if (object instanceof Item){
+				ItemStack stack = new ItemStack((Item) object, 1, OreDictionary.WILDCARD_VALUE);
+				List<ItemStack> subTypes = ItemUtils.getSubtypes(stack);
+				stackList.addAll(subTypes);
+			}
+		}
 		if(stackList.isEmpty() || stackList.size() == 1){
 			return;
 		}
