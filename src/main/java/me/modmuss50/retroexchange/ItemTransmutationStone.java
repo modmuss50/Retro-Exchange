@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import reborncore.common.registration.RebornRegistry;
 import reborncore.common.registration.impl.ConfigRegistry;
 
@@ -23,7 +25,7 @@ import java.util.List;
 public class ItemTransmutationStone extends Item {
 
 	@ConfigRegistry(key = "stone_max_damage", comment = "The max damage of a shard")
-	public static int maxDamage = 1000;
+	public static int maxDamage = 1500;
 
 	public ItemTransmutationStone() {
 		setCreativeTab(RetroExchange.CREATIVE_TAB);
@@ -65,6 +67,7 @@ public class ItemTransmutationStone extends Item {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack,
 	                           @Nullable
 		                           World worldIn, List<String> tooltip, ITooltipFlag flagIn) {

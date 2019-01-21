@@ -99,12 +99,11 @@ public class RetroExchange {
 		addTransmuteRecipe(Blocks.CLAY, Items.CLAY_BALL, 4);
 		addTransmuteRecipe(Blocks.OBSIDIAN, Blocks.PLANKS, 2);
 		addTransmuteRecipe(Items.IRON_INGOT, Blocks.OBSIDIAN, 4);
-		addTransmuteRecipe(Items.IRON_INGOT, Blocks.CLAY, 4);
 		addTransmuteRecipe(Items.GOLD_INGOT, Items.IRON_INGOT, 8);
 		addTransmuteRecipe(Items.DIAMOND, Items.GOLD_INGOT, 4);
 		addTransmuteRecipe(Blocks.GOLD_BLOCK, Blocks.IRON_BLOCK, 8);
 		addTransmuteRecipe(Blocks.DIAMOND_BLOCK, Blocks.GOLD_BLOCK, 4);
-		addTransmuteRecipe(Items.ENDER_EYE, Items.IRON_INGOT, 4);
+		addTransmuteRecipe(Items.ENDER_PEARL, Items.IRON_INGOT, 4);
 		addTransmuteRecipe(Items.REEDS, Items.PAPER, 3);
 		addTransmuteRecipe(Items.BONE, new ItemStack(Items.DYE, 1, 15), 3);
 		addTransmuteRecipe(Items.BLAZE_ROD, Items.BLAZE_POWDER, 3);
@@ -150,8 +149,6 @@ public class RetroExchange {
 				input, input, input, input, input, input, input
 			);
 		});
-
-
 	}
 
 	public static void addTransmuteRecipe(Object object, Object input, int size){
