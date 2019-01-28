@@ -33,6 +33,7 @@ public class ItemTransmutationStone extends Item {
 		setUnlocalizedName("retroexchange.transmutation_stone");
 		setMaxDamage(maxDamage);
 		setMaxStackSize(1);
+		setNoRepair();
 	}
 
 	@Override
