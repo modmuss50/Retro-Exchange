@@ -102,7 +102,7 @@ public class RetroExchange {
 		addTransmuteRecipe(Items.ENDER_PEARL, Items.IRON_INGOT, 4);
 		addTransmuteRecipe(Items.REEDS, Items.PAPER, 3);
 		addTransmuteRecipe(Items.BONE, new ItemStack(Items.DYE, 1, 15), 3);
-		addTransmuteRecipe(Items.BLAZE_ROD, Items.BLAZE_POWDER, 3);
+		addTransmuteRecipe(Items.BLAZE_ROD, Items.BLAZE_POWDER, 4);
 
 
 		addOneWayTransmuteRecipe(Blocks.DIRT, Blocks.SAND, 1);
