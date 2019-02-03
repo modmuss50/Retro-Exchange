@@ -1,83 +1,92 @@
 package me.modmuss50.retroexchange;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipOptions;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TextFormat;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import reborncore.common.registration.RebornRegistry;
-import reborncore.common.registration.impl.ConfigRegistry;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-@RebornRegistry(modID = "retroexchange")
-public class ItemTransmutationStone extends Item {
+public class ItemTransmutationStone extends Item implements ExtendedRecipeRemainder {
 
-	@ConfigRegistry(key = "stone_max_damage", comment = "The max damage of a shard")
 	public static int maxDamage = 1500;
 
 	public ItemTransmutationStone() {
-		setCreativeTab(RetroExchange.CREATIVE_TAB);
-		setRegistryName(new ResourceLocation("retroexchange", "transmutation_stone"));
-		setUnlocalizedName("retroexchange.transmutation_stone");
-		setMaxDamage(maxDamage);
-		setMaxStackSize(1);
-		setNoRepair();
+		super(new Item.Settings()
+			.itemGroup(RetroExchange.ITEM_GROUP)
+			.stackSize(1)
+			.durability(maxDamage)
+		);
 	}
 
 	@Override
-	public boolean hasContainerItem(ItemStack stack) {
-		return stack.getItem() == this;
-	}
-
-	@Override
-	public ItemStack getContainerItem(ItemStack itemStack) {
-		ItemStack newStack = itemStack.copy();
-		newStack.setItemDamage(itemStack.getItemDamage() + 1);
-		return newStack;
-	}
-
-	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		IBlockState blockState = worldIn.getBlockState(pos);
-		if(RetroExchange.blockConversionMap.containsKey(blockState.getBlock())){
-			if(!worldIn.isRemote){
-				worldIn.setBlockState(pos, RetroExchange.blockConversionMap.get(blockState.getBlock()).getDefaultState());
-
-				ItemStack stack = player.getHeldItem(hand).copy();
-				stack.setItemDamage(stack.getItemDamage() + 1);
-				if(stack.getItemDamage() >= maxDamage){
-					stack.setCount(0);
-				}
-				player.setHeldItem(hand, stack);
-			}
-			return EnumActionResult.SUCCESS;
+	public ItemStack getRemainderStack(ItemStack stack) {
+		damage(stack);
+		if(getDamage(stack) >= maxDamage){
+			return ItemStack.EMPTY;
 		}
-		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		return stack;
+	}
+
+
+	public static int getDamage(ItemStack stack){
+		checkTag(stack);
+		return stack.getTag().getInt("Damage");
+	}
+
+	public static ItemStack damage(ItemStack stack){
+		checkTag(stack);
+		stack.getTag().putInt("Damage", getDamage(stack) + 1);
+		return stack;
+	}
+
+	private static void checkTag(ItemStack stack){
+		if(!stack.hasTag()){
+			System.out.println("new tag");
+			stack.setTag(new CompoundTag());
+		}
+		if(!stack.getTag().containsKey("Damage")){
+			System.out.println("new damage");
+			stack.getTag().putInt("Damage", 0);
+		}
+	}
+
+	public ActionResult useOnBlock(ItemUsageContext context) {
+		BlockState blockState = context.getWorld().getBlockState(context.getBlockPos());
+		if(BlockExchangeManager.INSTANCE.blockConversionMap.containsKey(blockState.getBlock())){
+			if(!context.getWorld().isClient){
+				context.getWorld().setBlockState(context.getBlockPos(), BlockExchangeManager.INSTANCE.blockConversionMap.get(blockState.getBlock()).getDefaultState());
+
+				ItemStack stack = context.getPlayer().getStackInHand(Hand.MAIN).copy();
+				damage(stack);
+				if(getDamage(stack) >= maxDamage){
+					stack.setAmount(0);
+				}
+				context.getPlayer().setStackInHand(Hand.MAIN, stack);
+			}
+			return ActionResult.SUCCESS;
+		}
+		return ActionResult.PASS;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void buildTooltip(ItemStack stack, World world, List<TextComponent> tooltip, TooltipOptions tooltipOptions) {
+		tooltip.add(new StringTextComponent("Uses Left: " + TextFormat.GREEN + (maxDamage - getDamage(stack))));
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack,
-	                           @Nullable
-		                           World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add("Uses Left: " + TextFormatting.GREEN + (maxDamage - stack.getItemDamage()));
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack stack) {
-		return EnumRarity.EPIC;
+	public Rarity getRarity(ItemStack stack) {
+		return Rarity.EPIC;
 	}
 }

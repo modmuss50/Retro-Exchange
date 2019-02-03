@@ -1,0 +1,15 @@
+{
+  "id": "retroexchange",
+  "name": "Retro Exchange",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializers": [
+    "me.modmuss50.retroexchange.RetroExchange"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "common": "mixins.retroexchange.common.json"
+  }
+}

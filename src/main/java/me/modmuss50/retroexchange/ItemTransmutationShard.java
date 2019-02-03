@@ -1,20 +1,17 @@
 package me.modmuss50.retroexchange;
 
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rarity;
 
 public class ItemTransmutationShard extends Item {
 
 	public ItemTransmutationShard() {
-		setCreativeTab(RetroExchange.CREATIVE_TAB);
-		setRegistryName(new ResourceLocation("retroexchange", "transmutation_shard"));
-		setUnlocalizedName("retroexchange.transmutation_shard");
+		super(new Item.Settings().itemGroup(RetroExchange.ITEM_GROUP));
 	}
 
 	@Override
-	public EnumRarity getRarity(ItemStack stack) {
-		return EnumRarity.RARE;
+	public Rarity getRarity(ItemStack stack) {
+		return Rarity.RARE;
 	}
 }

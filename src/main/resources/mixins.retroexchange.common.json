@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "me.modmuss50.retroexchange.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinLivingEntity",
+    "MixinCraftingResultSlot"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
