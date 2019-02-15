@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemProvider;
 import net.minecraft.item.ItemStack;
@@ -27,12 +28,12 @@ import java.util.Collections;
 
 import static net.minecraft.datafixers.fixes.BlockEntitySignTextStrictJsonFix.GSON;
 
-public class TransmuationRecipeManager implements IdentifiableResourceReloadListener {
+public class TransmuationRecipeManager implements SimpleSynchronousResourceReloadListener {
 
 	private static int count = 0;
 
 	@Override
-	public void onResourceReload(ResourceManager resourceManager) {
+	public void apply(ResourceManager resourceManager) {
 		count = 0;
 		Collection<Identifier> resources = resourceManager.findResources("retroexchange_transmution", s -> s.endsWith(".json"));
 		resources.forEach(resourceIdentifier -> {

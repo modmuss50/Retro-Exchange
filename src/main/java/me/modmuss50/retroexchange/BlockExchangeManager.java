@@ -1,13 +1,11 @@
 package me.modmuss50.retroexchange;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceReloadListener;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.io.IOUtils;
@@ -19,14 +17,14 @@ import java.util.Map;
 
 import static net.minecraft.datafixers.fixes.BlockEntitySignTextStrictJsonFix.GSON;
 
-public class BlockExchangeManager implements IdentifiableResourceReloadListener {
+public class BlockExchangeManager implements SimpleSynchronousResourceReloadListener {
 
 	public static final BlockExchangeManager INSTANCE = new BlockExchangeManager();
 
 	public Map<Block, Block> blockConversionMap = new HashMap<>();
 
 	@Override
-	public void onResourceReload(ResourceManager resourceManager) {
+	public void apply(ResourceManager resourceManager) {
 		blockConversionMap.clear();
 
 		Collection<Identifier> resources = resourceManager.findResources("retroexchange", s -> s.equals("block_conversion.json"));
@@ -66,4 +64,5 @@ public class BlockExchangeManager implements IdentifiableResourceReloadListener 
 	public Identifier getFabricId() {
 		return new Identifier("retroexchange", "block_exchange");
 	}
+
 }
