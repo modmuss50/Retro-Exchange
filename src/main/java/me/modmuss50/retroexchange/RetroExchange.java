@@ -93,7 +93,7 @@ public class RetroExchange {
 		addTransmuteRecipe(Items.CLAY_BALL, Blocks.GRAVEL, 4);
 		addTransmuteRecipe(Items.CLAY_BALL, Items.FLINT, 4);
 		addTransmuteRecipe(Blocks.CLAY, Items.CLAY_BALL, 4);
-		addTransmuteRecipe(Blocks.OBSIDIAN, Blocks.PLANKS, 2);
+		addTransmuteRecipe(Blocks.OBSIDIAN, Blocks.LOG, 2);
 		addTransmuteRecipe(Items.IRON_INGOT, Blocks.OBSIDIAN, 4);
 		addTransmuteRecipe(Items.GOLD_INGOT, Items.IRON_INGOT, 8);
 		addTransmuteRecipe(Items.DIAMOND, Items.GOLD_INGOT, 4);
