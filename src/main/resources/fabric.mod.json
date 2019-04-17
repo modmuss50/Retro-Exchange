@@ -1,15 +1,19 @@
 {
+  "schemaVersion": 1,
   "id": "retroexchange",
   "name": "Retro Exchange",
   "version": "1.0.0",
-  "side": "universal",
-  "initializers": [
-    "me.modmuss50.retroexchange.RetroExchange"
-  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.modmuss50.retroexchange.RetroExchange"
+    ]
+  },
   "requires": {
+    "fabricloader": ">=0.4.0",
     "fabric": "*"
   },
-  "mixins": {
-    "common": "mixins.retroexchange.common.json"
-  }
+  "mixins": [
+    "mixins.retroexchange.common.json"
+  ]
 }

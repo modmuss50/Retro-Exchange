@@ -21,21 +21,23 @@ public class RetroExchange implements ModInitializer {
 	public static Item transmutationShard;
 	public static Item transmutationStone;
 
-	public static ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier("retroexchange", "item_group"), () -> new ItemStack(transmutationStone));
+	public static ItemGroup ITEM_GROUP;
 
 	public static int dropChance = 25;
 
 
 	@Override
 	public void onInitialize() {
+		ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier("retroexchange", "item_group"), () -> new ItemStack(transmutationStone));
+
 		transmutationShard = new ItemTransmutationShard();
 		transmutationStone = new ItemTransmutationStone();
 
-		Registry.ITEM.register(new Identifier("retroexchange", "transmutation_shard"), transmutationShard);
-		Registry.ITEM.register(new Identifier("retroexchange", "transmutation_stone"), transmutationStone);
+		Registry.register(Registry.ITEM, new Identifier("retroexchange", "transmutation_shard"), transmutationShard);
+		Registry.register(Registry.ITEM, new Identifier("retroexchange", "transmutation_stone"), transmutationStone);
 
-		ResourceManagerHelper.get(ResourceType.DATA).addReloadListener(BlockExchangeManager.INSTANCE);
-		ResourceManagerHelper.get(ResourceType.DATA).addReloadListener(new TransmuationRecipeManager());
+		ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(BlockExchangeManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(new TransmuationRecipeManager());
 	}
 
 	public static MinecraftServer getServer(){

@@ -3,7 +3,7 @@ package me.modmuss50.retroexchange;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -81,7 +81,7 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void buildTooltip(ItemStack stack, World world, List<TextComponent> tooltip, TooltipOptions tooltipOptions) {
+	public void buildTooltip(ItemStack stack, World world, List<TextComponent> tooltip, TooltipContext tooltipOptions) {
 		tooltip.add(new StringTextComponent("Uses Left: " + TextFormat.GREEN + (maxDamage - getDamage(stack))));
 	}
 
