@@ -5,8 +5,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.MinecraftClientGame;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -15,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.function.Supplier;
 
 public class RetroExchange implements ModInitializer {
 
@@ -24,6 +23,8 @@ public class RetroExchange implements ModInitializer {
 	public static ItemGroup ITEM_GROUP;
 
 	public static int dropChance = 25;
+
+	public static Supplier<MinecraftServer> serverSupplier = () -> (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
 
 	@Override
@@ -42,7 +43,7 @@ public class RetroExchange implements ModInitializer {
 
 	public static MinecraftServer getServer(){
 		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
-			return MinecraftClient.getInstance().getServer();
+			return RetroRxchangeClient.getServer();
 		} else {
 			return (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 		}
