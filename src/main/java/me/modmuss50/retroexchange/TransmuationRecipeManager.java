@@ -40,10 +40,11 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 			try {
 				Resource resource = resourceManager.getResource(resourceIdentifier);
 				String json = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+				resource.close();
 				JsonArray jsonArray = GSON.fromJson(json, JsonArray.class);
 				jsonArray.forEach(this::handle);
 
-				resource.close();
+
 			} catch (Exception e) {
 				System.out.println("Failed to read " + resourceIdentifier);
 				e.printStackTrace();
@@ -169,7 +170,10 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 			if (obj instanceof Ingredient) {
 				ingredient = (Ingredient) obj;
 			} else if (obj instanceof ItemStack) {
-				ingredient = Ingredient.ofStacks(((ItemStack) obj));
+				ItemStack stack = (ItemStack) obj;
+				System.out.println("called");
+				ingredient = Ingredient.ofStacks(stack.copy());
+				System.out.println("not called");
 			} else if (obj instanceof ItemConvertible) {
 				ingredient = Ingredient.ofStacks(new ItemStack((ItemConvertible) obj));
 			}
