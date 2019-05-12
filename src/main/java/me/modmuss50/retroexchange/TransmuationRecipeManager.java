@@ -42,8 +42,11 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 				String json = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 				resource.close();
 				JsonArray jsonArray = GSON.fromJson(json, JsonArray.class);
-				jsonArray.forEach(this::handle);
-
+				try {
+					jsonArray.forEach(this::handle);
+				} catch (Throwable e){
+					e.printStackTrace();
+				}
 
 			} catch (Exception e) {
 				System.out.println("Failed to read " + resourceIdentifier);
@@ -52,8 +55,6 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		});
 
 		addAllSmelting();
-
-		System.out.println("Loaded " + count + " transmutation recipes");
 	}
 
 	private void handle(JsonElement jsonElement) {
@@ -96,17 +97,15 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		addTransmuteRecipe(itemA, itemB, amount);
 	}
 
-	public void addTransmuteRecipe(Object object, Object input, int size) {
-		ItemStack output = getStack(object);
-
+	public void addTransmuteRecipe(Item item, Object input, int size) {
 		Object[] inputs = new Object[size + 1];
 		for (int i = 1; i < size + 1; i++) {
 			inputs[i] = input;
 		}
-		inputs[0] = getStoneStack();
-		addShapelessRecipe(output, inputs);
+		inputs[0] = RetroExchange.transmutationStone;
+		addShapelessRecipe(new ItemStack(item), inputs);
 
-		addShapelessRecipe(getStack(input, size), output, getStoneStack());
+		addShapelessRecipe(getStack(input, size), item, RetroExchange.transmutationStone);
 
 	}
 
@@ -123,15 +122,11 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 
 				ItemStack copy = output.copy();
 				copy.setAmount(7);
-				addShapelessRecipe(copy, getStoneStack(), new ItemStack(Items.COAL),
+				addShapelessRecipe(copy, RetroExchange.transmutationStone, Items.COAL,
 					input, input, input, input, input, input, input
 				);
 
 			});
-	}
-
-	public static ItemStack getStoneStack() {
-		return new ItemStack(RetroExchange.transmutationStone, 1);
 	}
 
 	public static ItemStack getStack(Object object) {
@@ -154,8 +149,8 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		return new Identifier("retroexchange", "transmution_id_" + count++);
 	}
 
-	public void addShapelessRecipe(ItemStack output, Object... input) {
-		ShapelessRecipe recipe = new ShapelessRecipe(getNextID(), "", output, buildInput(input));
+	public void addShapelessRecipe(ItemStack stack, Object... input) {
+		ShapelessRecipe recipe = new ShapelessRecipe(getNextID(), "", stack, buildInput(input));
 		getRecipeManager().add(recipe);
 	}
 
@@ -170,12 +165,9 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 			if (obj instanceof Ingredient) {
 				ingredient = (Ingredient) obj;
 			} else if (obj instanceof ItemStack) {
-				ItemStack stack = (ItemStack) obj;
-				System.out.println("called");
-				ingredient = Ingredient.ofStacks(stack.copy());
-				System.out.println("not called");
+				throw new UnsupportedOperationException("thanks mojang");
 			} else if (obj instanceof ItemConvertible) {
-				ingredient = Ingredient.ofStacks(new ItemStack((ItemConvertible) obj));
+				ingredient = Ingredient.ofItems((ItemConvertible) obj);
 			}
 
 			if (obj == null) {
