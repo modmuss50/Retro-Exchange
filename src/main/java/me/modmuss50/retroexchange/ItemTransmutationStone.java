@@ -2,15 +2,15 @@ package me.modmuss50.retroexchange;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
@@ -68,12 +68,12 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 			if(!context.getWorld().isClient){
 				context.getWorld().setBlockState(context.getBlockPos(), BlockExchangeManager.INSTANCE.blockConversionMap.get(blockState.getBlock()).getDefaultState());
 
-				ItemStack stack = context.getPlayer().getStackInHand(Hand.MAIN).copy();
+				ItemStack stack = context.getPlayer().getStackInHand(Hand.MAIN_HAND).copy();
 				damage(stack);
 				if(getDamage(stack) >= maxDamage){
 					stack.setAmount(0);
 				}
-				context.getPlayer().setStackInHand(Hand.MAIN, stack);
+				context.getPlayer().setStackInHand(Hand.MAIN_HAND, stack);
 			}
 			return ActionResult.SUCCESS;
 		}
@@ -81,8 +81,8 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void buildTooltip(ItemStack stack, World world, List<TextComponent> tooltip, TooltipContext tooltipOptions) {
-		tooltip.add(new StringTextComponent("Uses Left: " + TextFormat.GREEN + (maxDamage - getDamage(stack))));
+	public void buildTooltip(ItemStack stack, World world, List<Component> tooltip, TooltipContext tooltipOptions) {
+		tooltip.add(new TextComponent("Uses Left: " + ChatFormat.GREEN + (maxDamage - getDamage(stack))));
 	}
 
 	@Override

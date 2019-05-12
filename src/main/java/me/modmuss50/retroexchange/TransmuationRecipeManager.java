@@ -4,11 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemProvider;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
@@ -51,6 +51,8 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		});
 
 		addAllSmelting();
+
+		System.out.println("Loaded " + count + " transmutation recipes");
 	}
 
 	private void handle(JsonElement jsonElement) {
@@ -140,8 +142,8 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		if (object instanceof ItemStack) {
 			stack = ((ItemStack) object).copy();
 		}
-		if (object instanceof ItemProvider) {
-			stack = new ItemStack((ItemProvider) object, size);
+		if (object instanceof ItemConvertible) {
+			stack = new ItemStack((ItemConvertible) object, size);
 		}
 		stack.setAmount(size);
 		return stack;
@@ -167,9 +169,9 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 			if (obj instanceof Ingredient) {
 				ingredient = (Ingredient) obj;
 			} else if (obj instanceof ItemStack) {
-				ingredient = Ingredient.ofStacks((ItemStack) obj);
-			} else if (obj instanceof ItemProvider) {
-				ingredient = Ingredient.ofStacks(new ItemStack((ItemProvider) obj));
+				ingredient = Ingredient.ofStacks(((ItemStack) obj));
+			} else if (obj instanceof ItemConvertible) {
+				ingredient = Ingredient.ofStacks(new ItemStack((ItemConvertible) obj));
 			}
 
 			if (obj == null) {

@@ -37,8 +37,8 @@ public class RetroExchange implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("retroexchange", "transmutation_shard"), transmutationShard);
 		Registry.register(Registry.ITEM, new Identifier("retroexchange", "transmutation_stone"), transmutationStone);
 
-		ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(BlockExchangeManager.INSTANCE);
-		ResourceManagerHelper.get(ResourceType.DATA).registerReloadListener(new TransmuationRecipeManager());
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(BlockExchangeManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new TransmuationRecipeManager());
 	}
 
 	public static MinecraftServer getServer(){
