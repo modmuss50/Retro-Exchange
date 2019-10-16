@@ -7,7 +7,7 @@ import net.minecraft.util.Rarity;
 public class ItemTransmutationShard extends Item {
 
 	public ItemTransmutationShard() {
-		super(new Item.Settings().itemGroup(RetroExchange.ITEM_GROUP));
+		super(new Item.Settings().group(RetroExchange.ITEM_GROUP));
 	}
 
 	@Override

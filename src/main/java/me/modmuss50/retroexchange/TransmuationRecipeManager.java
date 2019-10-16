@@ -1,20 +1,15 @@
 package me.modmuss50.retroexchange;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.crafting.ShapelessRecipe;
+import net.minecraft.recipe.*;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.DefaultedList;
@@ -23,16 +18,25 @@ import net.minecraft.util.registry.Registry;
 import org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.datafixers.fixes.BlockEntitySignTextStrictJsonFix.GSON;
 
-public class TransmuationRecipeManager implements SimpleSynchronousResourceReloadListener {
+public class TransmuationRecipeManager {
 
-	private static int count = 0;
+	private int count = 0;
 
-	@Override
+	private final RecipeManager recipeManager;
+	private final Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> recipeMap;
+
+	public TransmuationRecipeManager(RecipeManager recipeManager, Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> recipeMap) {
+		this.recipeManager = recipeManager;
+		this.recipeMap = recipeMap;
+	}
+
 	public void apply(ResourceManager resourceManager) {
 		count = 0;
 		Collection<Identifier> resources = resourceManager.findResources("retroexchange_transmution", s -> s.endsWith(".json"));
@@ -94,10 +98,15 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		}
 
 		int amount = jsonObject.get("amount").getAsInt();
-		addTransmuteRecipe(itemA, itemB, amount);
+		boolean reversible = true;
+		if(jsonObject.has("reversible")){
+			reversible = jsonObject.get("reversible").getAsBoolean();
+		}
+
+		addTransmuteRecipe(itemA, itemB, amount, reversible);
 	}
 
-	public void addTransmuteRecipe(Item item, Object input, int size) {
+	public void addTransmuteRecipe(Item item, Object input, int size, boolean reversible) {
 		Object[] inputs = new Object[size + 1];
 		for (int i = 1; i < size + 1; i++) {
 			inputs[i] = input;
@@ -105,35 +114,36 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		inputs[0] = RetroExchange.transmutationStone;
 		addShapelessRecipe(new ItemStack(item), inputs);
 
+		if(!reversible) return;
 		addShapelessRecipe(getStack(input, size), item, RetroExchange.transmutationStone);
-
 	}
 
 	public void addAllSmelting() {
-		getRecipeManager()
+		recipeManager
 			.values().stream()
 			.filter(recipe -> recipe.getType() == RecipeType.SMELTING)
 			.forEach(recipe -> {
 				ItemStack output = recipe.getOutput();
-				Ingredient input = recipe.getPreviewInputs().get(0);
-				if (output.isEmpty() || input.isEmpty()) {
-					return;
+
+				for(Ingredient input : recipe.getPreviewInputs()){
+					if (output.isEmpty() || input.isEmpty()) {
+						return;
+					}
+
+					ItemStack copy = output.copy();
+					copy.setCount(7);
+					addShapelessRecipe(copy, RetroExchange.transmutationStone, Items.COAL,
+					                   input, input, input, input, input, input, input
+					);
 				}
-
-				ItemStack copy = output.copy();
-				copy.setAmount(7);
-				addShapelessRecipe(copy, RetroExchange.transmutationStone, Items.COAL,
-					input, input, input, input, input, input, input
-				);
-
 			});
 	}
 
-	public static ItemStack getStack(Object object) {
+	public ItemStack getStack(Object object) {
 		return getStack(object, 1);
 	}
 
-	public static ItemStack getStack(Object object, int size) {
+	public ItemStack getStack(Object object, int size) {
 		ItemStack stack = ItemStack.EMPTY;
 		if (object instanceof ItemStack) {
 			stack = ((ItemStack) object).copy();
@@ -141,7 +151,7 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 		if (object instanceof ItemConvertible) {
 			stack = new ItemStack((ItemConvertible) object, size);
 		}
-		stack.setAmount(size);
+		stack.setCount(size);
 		return stack;
 	}
 
@@ -151,15 +161,11 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 
 	public void addShapelessRecipe(ItemStack stack, Object... input) {
 		ShapelessRecipe recipe = new ShapelessRecipe(getNextID(), "", stack, buildInput(input));
-		getRecipeManager().add(recipe);
+		recipeMap.get(recipe.getType()).put(recipe.getId(), recipe);
 	}
 
-	private static RecipeManager getRecipeManager() {
-		return RetroExchange.getServer().getRecipeManager();
-	}
-
-	private static DefaultedList<Ingredient> buildInput(Object[] input) {
-		DefaultedList<Ingredient> list = DefaultedList.create();
+	private DefaultedList<Ingredient> buildInput(Object[] input) {
+		DefaultedList<Ingredient> list = DefaultedList.of();
 		for (Object obj : input) {
 			Ingredient ingredient = null;
 			if (obj instanceof Ingredient) {
@@ -176,16 +182,5 @@ public class TransmuationRecipeManager implements SimpleSynchronousResourceReloa
 			list.add(ingredient);
 		}
 		return list;
-	}
-
-	@Override
-	public Identifier getFabricId() {
-		return new Identifier("retroexchange", "transmutation");
-	}
-
-	//Forces this to load after the recipes, so we can add recipes based on other recipes :)
-	@Override
-	public Collection<Identifier> getFabricDependencies() {
-		return Collections.singletonList(ResourceReloadListenerKeys.RECIPES);
 	}
 }

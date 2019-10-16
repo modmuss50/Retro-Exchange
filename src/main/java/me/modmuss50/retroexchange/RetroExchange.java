@@ -24,9 +24,6 @@ public class RetroExchange implements ModInitializer {
 
 	public static int dropChance = 25;
 
-	public static Supplier<MinecraftServer> serverSupplier = () -> (MinecraftServer) FabricLoader.getInstance().getGameInstance();
-
-
 	@Override
 	public void onInitialize() {
 		ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier("retroexchange", "item_group"), () -> new ItemStack(transmutationStone));
@@ -38,7 +35,6 @@ public class RetroExchange implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("retroexchange", "transmutation_stone"), transmutationStone);
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(BlockExchangeManager.INSTANCE);
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new TransmuationRecipeManager());
 	}
 
 	public static MinecraftServer getServer(){

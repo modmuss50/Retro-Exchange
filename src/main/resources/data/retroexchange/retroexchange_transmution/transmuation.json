@@ -44,7 +44,7 @@
   {
     "items": [
       "minecraft:obsidian",
-      "minecraft:oak_planks"
+      "minecraft:oak_log"
     ],
     "amount": 2
   },
@@ -60,7 +60,7 @@
       "minecraft:gold_ingot",
       "minecraft:iron_ingot"
     ],
-    "amount": 4
+    "amount": 8
   },
   {
     "items": [

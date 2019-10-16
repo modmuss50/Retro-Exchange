@@ -2,16 +2,17 @@ package me.modmuss50.retroexchange;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
@@ -24,14 +25,17 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 
 	public ItemTransmutationStone() {
 		super(new Item.Settings()
-			.itemGroup(RetroExchange.ITEM_GROUP)
-			.stackSize(1)
-			.durability(maxDamage)
+			.group(RetroExchange.ITEM_GROUP)
+			.maxCount(1)
+			.maxDamage(maxDamage)
 		);
 	}
 
 	@Override
-	public ItemStack getRemainderStack(ItemStack stack) {
+	public ItemStack getRemainderStack(ItemStack stack, PlayerEntity playerEntity) {
+		if(playerEntity.isCreative()){
+			return stack;
+		}
 		damage(stack);
 		if(getDamage(stack) >= maxDamage){
 			return ItemStack.EMPTY;
@@ -71,7 +75,7 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 				ItemStack stack = context.getPlayer().getStackInHand(Hand.MAIN_HAND).copy();
 				damage(stack);
 				if(getDamage(stack) >= maxDamage){
-					stack.setAmount(0);
+					stack.setCount(0);
 				}
 				context.getPlayer().setStackInHand(Hand.MAIN_HAND, stack);
 			}
@@ -81,8 +85,8 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void buildTooltip(ItemStack stack, World world, List<Component> tooltip, TooltipContext tooltipOptions) {
-		tooltip.add(new TextComponent("Uses Left: " + ChatFormat.GREEN + (maxDamage - getDamage(stack))));
+	public void buildTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext tooltipOptions) {
+		tooltip.add(new LiteralText("Uses Left: " + Formatting.GREEN + (maxDamage - getDamage(stack))));
 	}
 
 	@Override
