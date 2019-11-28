@@ -20,7 +20,7 @@ import java.util.Map;
 @Mixin(RecipeManager.class)
 public class MixinRecipeManager {
 
-	@Inject(method = "method_20705", at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(method = "apply", at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
 	protected void method_20705(Map<Identifier, JsonObject> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo info, Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> recipeMap) {
 		new TransmuationRecipeManager((RecipeManager) (Object)this, recipeMap).apply(resourceManager);
 	}

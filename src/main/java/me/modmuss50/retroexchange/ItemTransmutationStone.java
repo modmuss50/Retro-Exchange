@@ -60,7 +60,7 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 			System.out.println("new tag");
 			stack.setTag(new CompoundTag());
 		}
-		if(!stack.getTag().containsKey("Damage")){
+		if(!stack.getTag().contains("Damage")){
 			System.out.println("new damage");
 			stack.getTag().putInt("Damage", 0);
 		}

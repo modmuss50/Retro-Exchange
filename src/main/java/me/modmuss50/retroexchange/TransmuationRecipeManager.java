@@ -119,7 +119,7 @@ public class TransmuationRecipeManager {
 	}
 
 	public void addAllSmelting() {
-		recipeManager
+		recipeMap.get(RecipeType.SMELTING).build()
 			.values().stream()
 			.filter(recipe -> recipe.getType() == RecipeType.SMELTING)
 			.forEach(recipe -> {
