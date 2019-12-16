@@ -16,6 +16,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
+import reborncore.common.recipes.ExtendedRecipeRemainder;
 
 import java.util.List;
 
@@ -32,10 +33,7 @@ public class ItemTransmutationStone extends Item implements ExtendedRecipeRemain
 	}
 
 	@Override
-	public ItemStack getRemainderStack(ItemStack stack, PlayerEntity playerEntity) {
-		if(playerEntity.isCreative()){
-			return stack;
-		}
+	public ItemStack getRemainderStack(ItemStack stack) {
 		damage(stack);
 		if(getDamage(stack) >= maxDamage){
 			return ItemStack.EMPTY;

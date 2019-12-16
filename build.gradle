@@ -15,13 +15,24 @@ if (ENV.BUILD_NUMBER) {
 
 archivesBaseName = "Retro-Exchange"
 
+repositories {
+	maven {
+		name = "Modmuss50"
+		url = "https://maven.modmuss50.me/"
+	}
+}
+
 dependencies {
-	minecraft "com.mojang:minecraft:1.15-pre3"
-	mappings "net.fabricmc:yarn:1.15-pre3+build.1:v2"
-	modCompile "net.fabricmc:fabric-loader:0.7.2+build.174"
+	minecraft "com.mojang:minecraft:1.15"
+	mappings "net.fabricmc:yarn:1.15+build.2:v2"
+	modImplementation "net.fabricmc:fabric-loader:0.7.2+build.174"
 
 	//Fabric api
-	modCompile "net.fabricmc.fabric-api:fabric-api:0.4.17+build.270-1.15"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.4.24+build.279-1.15"
+
+	modApi ('RebornCore:RebornCore-1.15:+') {
+		exclude group: "net.fabricmc"
+	}
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
