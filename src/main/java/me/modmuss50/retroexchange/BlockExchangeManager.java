@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.minecraft.datafixers.fixes.BlockEntitySignTextStrictJsonFix.GSON;
+import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
 
 public class BlockExchangeManager implements SimpleSynchronousResourceReloadListener {
 

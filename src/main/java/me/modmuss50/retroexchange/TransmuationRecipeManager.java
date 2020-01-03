@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static net.minecraft.datafixers.fixes.BlockEntitySignTextStrictJsonFix.GSON;
+import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
 
 public class TransmuationRecipeManager {
 
