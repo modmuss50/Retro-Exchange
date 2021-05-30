@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 }
 
 sourceCompatibility = 1.8
@@ -23,14 +23,14 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.15.2-pre2"
-	mappings "net.fabricmc:yarn:1.15.2-pre2+build.5:v2"
-	modImplementation "net.fabricmc:fabric-loader:0.7.4+build.177"
+    minecraft "com.mojang:minecraft:1.16.5"
+    mappings "net.fabricmc:yarn:1.16.5+build.9:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
 	//Fabric api
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.4.28+build.288-1.15"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.6+1.16"
 
-	modApi ('RebornCore:RebornCore-1.15:+') {
+	modApi ('RebornCore:RebornCore-1.16:+') {
 		exclude group: "net.fabricmc"
 	}
 }
