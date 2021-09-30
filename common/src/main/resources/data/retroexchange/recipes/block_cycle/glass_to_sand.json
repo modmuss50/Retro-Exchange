@@ -1,0 +1,8 @@
+{
+	"type": "retroexchange:block_cycle",
+	"loop": false,
+	"blocks": [
+		"minecraft:glass",
+		"minecraft:sand"
+	]
+}

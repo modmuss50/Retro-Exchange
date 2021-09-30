@@ -1,0 +1,11 @@
+{
+	"type": "retroexchange:block_cycle",
+	"loop": true,
+	"blocks": [
+		"minecraft:sand",
+		"minecraft:dirt",
+		"minecraft:grass_block",
+		"minecraft:cobblestone",
+		"minecraft:stone"
+	]
+}

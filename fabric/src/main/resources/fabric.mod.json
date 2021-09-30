@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "retroexchange",
+	"version": "${version}",
+	"name": "Retro Exchange",
+	"description": "Retro Exchange",
+	"authors": [
+		"modmuss50",
+		"LatvianModder"
+	],
+	"contact": {
+		"sources": "https://github.com/modmuss50/Retro-Exchange",
+		"issues": "https://github.com/modmuss50/Retro-Exchange/issues"
+	},
+	"license": "MIT",
+	"entrypoints": {
+		"main": [
+			"me.modmuss50.mods.retroexchange.RetroExchangeFabric"
+		]
+	},
+	"mixins": [
+		"retroexchange-common.mixins.json"
+	],
+	"depends": {
+		"fabric": "*",
+		"minecraft": "~1.16.5",
+		"architectury": ">=1.20.28"
+	}
+}

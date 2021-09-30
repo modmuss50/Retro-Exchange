@@ -1,0 +1,13 @@
+{
+	"type": "retroexchange:block_cycle",
+	"loop": true,
+	"blocks": [
+		"minecraft:gravel",
+		"minecraft:sandstone",
+		"minecraft:chiseled_sandstone",
+		"minecraft:cut_sandstone",
+		"minecraft:red_sandstone",
+		"minecraft:chiseled_red_sandstone",
+		"minecraft:cut_red_sandstone"
+	]
+}

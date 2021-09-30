@@ -1,25 +1,25 @@
-/bin
-/out
-/run/*
-/build
-/eclipse
-/.gradle
-*.iml
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
 *.ipr
 *.iws
-/.metadata
-/.settings
-/classpath
-/dep
+*.iml
+.idea
 
-TechReborn.iws
-TechReborn.ipr
-Thumbs.db
-changelog.txt
-*.log
-*.launch
-*.project
-*.classpath
-.idea/*
-/logs/
-/classes/
+# gradle
+build
+.gradle
+logs
+
+# other
+eclipse
+run
+run_server
+.vscode
