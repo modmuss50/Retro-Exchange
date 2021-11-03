@@ -1,6 +1,5 @@
-package me.modmuss50.mods.retroexchange;
+package me.modmuss50.retroexchange;
 
-import me.modmuss50.retroexchange.RetroExchange;
 import net.fabricmc.api.ModInitializer;
 
 public class RetroExchangeFabric implements ModInitializer {

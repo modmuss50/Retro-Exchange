@@ -15,7 +15,7 @@
 	"license": "MIT",
 	"entrypoints": {
 		"main": [
-			"me.modmuss50.mods.retroexchange.RetroExchangeFabric"
+			"me.modmuss50.retroexchange.RetroExchangeFabric"
 		]
 	},
 	"mixins": [
@@ -23,7 +23,7 @@
 	],
 	"depends": {
 		"fabric": "*",
-		"minecraft": "~1.16.5",
-		"architectury": ">=1.20.28"
+		"minecraft": "~1.17",
+		"architectury": ">=2.0.0"
 	}
 }

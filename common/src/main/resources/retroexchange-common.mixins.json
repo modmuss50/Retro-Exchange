@@ -1,7 +1,8 @@
 {
 	"required": true,
 	"package": "me.modmuss50.retroexchange.mixin",
-	"compatibilityLevel": "JAVA_8",
+	"minVersion": "0.8",
+	"compatibilityLevel": "JAVA_16",
 	"mixins": [
 		"MixinRecipeManager"
 	],

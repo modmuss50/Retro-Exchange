@@ -1,22 +1,27 @@
 plugins {
-	id "com.github.johnrengelman.shadow" version "5.0.0"
+	id "com.github.johnrengelman.shadow" version "7.1.0"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 def ENV = System.getenv()
-
-configurations {
-	shadowCommon
-}
 
 architectury {
 	platformSetupLoomIde()
 	forge()
 }
 
+configurations {
+	common
+	shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+	compileClasspath.extendsFrom common
+	runtimeClasspath.extendsFrom common
+	developmentForge.extendsFrom common
+}
+
 loom {
-	mixinConfigs = ["retroexchange-common.mixins.json"]
-	useFabricMixin = true
+	forge {
+		mixinConfigs "retroexchange-common.mixins.json"
+	}
 }
 
 repositories {
@@ -32,19 +37,16 @@ repositories {
 dependencies {
 	forge("net.minecraftforge:forge:${rootProject.architectury.minecraft}-${rootProject.forge_version}")
 
-	modApi("me.shedaniel:architectury-forge:${rootProject.architectury_version}")
-	modOptional("mezz.jei:jei-1.16.4:${rootProject.forge_jei_version}")
+	modApi("dev.architectury:architectury-forge:${rootProject.architectury_version}")
+	modOptional("mezz.jei:jei-1.17.1:${rootProject.forge_jei_version}")
 
 	// test mods, these are included at runtime only
 	// modRuntime("com.resourcefulbees:ResourcefulBees:1.16.5-0.6.4b")
 	// modRuntime("curse.maven:athenaeum-1-16-437531:3188454")
 	// modRuntime("curse.maven:artisan-worktables-1-16-437529:3277959")
 
-	implementation(project(path: ":common")) {
-		transitive = false
-	}
-	developmentForge(project(path: ":common")) {
-		transitive = false
+	common(project(path: ":common", configuration: "namedElements")) {
+		transitive false
 	}
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
 		transitive = false
@@ -80,13 +82,25 @@ jar {
 				"Specification-Vendor"    : project.mod_author,
 				"Specification-Version"   : "1",
 				"Implementation-Title"    : project.name,
-				"Implementation-Version"  : version,
+				"Implementation-Version"  : project.version,
 				"Implementation-Vendor"   : project.mod_author,
 				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
 		])
 	}
 
 	classifier "dev"
+}
+
+sourcesJar {
+	def commonSources = project(":common").sourcesJar
+	dependsOn commonSources
+	from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+		skip()
+	}
 }
 
 if (ENV.CURSEFORGE_KEY) {
@@ -96,7 +110,7 @@ if (ENV.CURSEFORGE_KEY) {
 			id = project.curseforge_id_forge
 			releaseType = project.curseforge_type
 			addGameVersion "Forge"
-			addGameVersion "1.16.5"
+			addGameVersion "1.17.1"
 			mainArtifact(remapJar.archivePath)
 			relations {
 				requiredDependency 'architectury-forge'

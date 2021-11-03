@@ -1,7 +1,7 @@
-package me.modmuss50.mods.retroexchange;
+package me.modmuss50.retroexchange.forge;
 
+import dev.architectury.platform.forge.EventBuses;
 import me.modmuss50.retroexchange.RetroExchange;
-import me.shedaniel.architectury.platform.forge.EventBuses;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
