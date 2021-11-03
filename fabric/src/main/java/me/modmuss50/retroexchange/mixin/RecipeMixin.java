@@ -1,7 +1,6 @@
 package me.modmuss50.retroexchange.mixin;
 
 import me.modmuss50.retroexchange.ExtendedRecipeRemainder;
-import me.modmuss50.retroexchange.RetroExchangeItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;

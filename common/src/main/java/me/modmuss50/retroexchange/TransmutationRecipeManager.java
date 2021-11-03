@@ -22,8 +22,9 @@ import net.minecraft.world.level.ItemLike;
 import org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Map;
+
+import static me.modmuss50.retroexchange.RetroExchange.MOD_ID;
 
 public class TransmutationRecipeManager {
 	private int count = 0;
@@ -36,23 +37,15 @@ public class TransmutationRecipeManager {
 
 	public void apply(ResourceManager resourceManager) {
 		count = 0;
-		Collection<ResourceLocation> resources = resourceManager.listResources("retroexchange_transmutation", s -> s.endsWith(".json"));
-		resources.forEach(resourceIdentifier -> {
-			try {
-				Resource resource = resourceManager.getResource(resourceIdentifier);
+		for (var resourceIdentifier : resourceManager.listResources("retroexchange_transmutation", s -> s.endsWith(".json"))) {
+			try (Resource resource = resourceManager.getResource(resourceIdentifier)) {
 				String json = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
-				resource.close();
 				JsonArray jsonArray = BlockEntitySignTextStrictJsonFix.GSON.fromJson(json, JsonArray.class);
-				try {
-					jsonArray.forEach(this::handle);
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
+				jsonArray.forEach(this::handle);
 			} catch (Exception e) {
-				System.out.println("Failed to read " + resourceIdentifier);
-				e.printStackTrace();
+				RetroExchange.LOGGER.error("Failed to read {}", resourceIdentifier, e);
 			}
-		});
+		}
 
 		addAllSmelting();
 	}
@@ -150,7 +143,7 @@ public class TransmutationRecipeManager {
 	}
 
 	private ResourceLocation getNextID() {
-		return new ResourceLocation("retroexchange", "transmutation/id_" + count++);
+		return new ResourceLocation(MOD_ID, "transmutation/id_" + count++);
 	}
 
 	public void addShapelessRecipe(ItemStack stack, Object... input) {

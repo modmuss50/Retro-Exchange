@@ -19,12 +19,12 @@ import java.util.List;
 
 public class TransmutationStoneItem extends Item implements ExtendedRecipeRemainder {
 
-	public static int maxDamage = 1500;
+	public static final int MAX_DAMAGE = 1500;
 
 	public TransmutationStoneItem() {
 		super(new Properties()
 				.tab(RetroExchange.tab)
-				.durability(maxDamage)
+				.durability(MAX_DAMAGE)
 		);
 	}
 
@@ -69,7 +69,7 @@ public class TransmutationStoneItem extends Item implements ExtendedRecipeRemain
 				ItemStack stack = context.getPlayer().getItemInHand(context.getHand()).copy();
 				damage(stack);
 
-				if (getDamage(stack) >= maxDamage) {
+				if (getDamage(stack) >= MAX_DAMAGE) {
 					stack.setCount(0);
 				}
 
@@ -85,7 +85,7 @@ public class TransmutationStoneItem extends Item implements ExtendedRecipeRemain
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag tooltipOptions) {
-		tooltip.add(new TextComponent("Uses Left: ").append(new TextComponent("" + (maxDamage - getDamage(stack)))).withStyle(ChatFormatting.GREEN));
+		tooltip.add(new TextComponent("Uses Left: ").append(new TextComponent(String.valueOf(MAX_DAMAGE - stack.getDamageValue()))).withStyle(ChatFormatting.GREEN));
 	}
 
 	@Override

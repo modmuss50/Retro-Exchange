@@ -9,6 +9,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class RetroExchangeForge {
 	public RetroExchangeForge() {
 		EventBuses.registerModEventBus(RetroExchange.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-		new RetroExchange();
+		RetroExchange.init();
 	}
 }
