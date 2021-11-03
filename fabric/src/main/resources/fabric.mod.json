@@ -19,7 +19,8 @@
 		]
 	},
 	"mixins": [
-		"retroexchange-common.mixins.json"
+		"retroexchange-common.mixins.json",
+		"retroexchange-fabric.mixins.json"
 	],
 	"depends": {
 		"fabric": "*",

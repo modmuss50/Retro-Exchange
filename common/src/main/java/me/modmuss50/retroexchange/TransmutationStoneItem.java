@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class TransmutationStoneItem extends Item /*implements ExtendedRecipeRemainder*/ {
+public class TransmutationStoneItem extends Item implements ExtendedRecipeRemainder {
 
 	public static int maxDamage = 1500;
 
@@ -28,7 +28,8 @@ public class TransmutationStoneItem extends Item /*implements ExtendedRecipeRema
 		);
 	}
 
-	// FIXME: @Override
+	// FIXME: not functional on Forge
+	@Override
 	public ItemStack getRemainderStack(ItemStack stack) {
 		damage(stack);
 		if (getDamage(stack) >= maxDamage) {
