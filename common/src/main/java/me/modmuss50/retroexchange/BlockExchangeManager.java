@@ -12,24 +12,23 @@ import net.minecraft.world.level.block.Blocks;
 import org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static me.modmuss50.retroexchange.RetroExchange.MOD_ID;
 
 public class BlockExchangeManager implements ResourceManagerReloadListener {
 
 	public static final BlockExchangeManager INSTANCE = new BlockExchangeManager();
 
-	public Map<Block, Block> blockConversionMap = new HashMap<>();
+	public final Map<Block, Block> blockConversionMap = new HashMap<>();
 
 	@Override
 	public void onResourceManagerReload(ResourceManager resourceManager) {
 		blockConversionMap.clear();
 
-		Collection<ResourceLocation> resources = resourceManager.listResources("retroexchange", s -> s.equals("block_conversion.json"));
-		resources.forEach(resourceIdentifier -> {
-			try {
-				Resource resource = resourceManager.getResource(resourceIdentifier);
+		for (var resourceIdentifier : resourceManager.listResources(MOD_ID, s -> s.equals("block_conversion.json"))) {
+			try (Resource resource = resourceManager.getResource(resourceIdentifier)) {
 				String json = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 				JsonObject jsonObject = BlockEntitySignTextStrictJsonFix.GSON.fromJson(json, JsonObject.class);
 				jsonObject.entrySet().forEach(entry -> {
@@ -40,22 +39,20 @@ public class BlockExchangeManager implements ResourceManagerReloadListener {
 					Block outputBlock = Registry.BLOCK.get(new ResourceLocation(output));
 
 					if (inputBlock == Blocks.AIR) {
-						System.out.println(input + " is an unknown block");
+						RetroExchange.LOGGER.error("{} is an unknown block", input);
 						return;
 					}
 
-					if (inputBlock == Blocks.AIR) {
-						System.out.println(output + " is an unknown block");
+					if (outputBlock == Blocks.AIR) {
+						RetroExchange.LOGGER.error("{} is an unknown block", output);
 						return;
 					}
 
 					blockConversionMap.put(inputBlock, outputBlock);
 				});
-
-				resource.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				RetroExchange.LOGGER.error(e);
 			}
-		});
+		}
 	}
 }

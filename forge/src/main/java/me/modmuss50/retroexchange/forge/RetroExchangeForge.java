@@ -1,7 +1,7 @@
-package me.modmuss50.mods.retroexchange;
+package me.modmuss50.retroexchange.forge;
 
+import dev.architectury.platform.forge.EventBuses;
 import me.modmuss50.retroexchange.RetroExchange;
-import me.shedaniel.architectury.platform.forge.EventBuses;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -9,6 +9,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class RetroExchangeForge {
 	public RetroExchangeForge() {
 		EventBuses.registerModEventBus(RetroExchange.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-		new RetroExchange();
+		RetroExchange.init();
 	}
 }

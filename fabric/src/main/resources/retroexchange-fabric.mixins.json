@@ -4,7 +4,7 @@
 	"minVersion": "0.8",
 	"compatibilityLevel": "JAVA_16",
 	"mixins": [
-		"MixinRecipeManager"
+		"RecipeMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
